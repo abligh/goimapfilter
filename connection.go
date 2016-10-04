@@ -183,19 +183,26 @@ func (ic *ImapConnection) Proxy() {
 		atomic.AddInt64(&openConnections, -1)
 	}()
 
-	logger.Printf("[INFO] [C:%08x] New connection to %s", ic.id, *remote)
+	proto := "tcp"
+	if *ipv6 {
+		proto = "tcp6"
+	} else if *ipv4 {
+		proto = "tcp4"
+	}
+
+	logger.Printf("[INFO] [C:%08x] New %s connection to %s", ic.id, proto, *remote)
 
 	// First open the remote connection
 	if *ssl {
 		conf := &tls.Config{}
-		c, err := tls.Dial("tcp", *remote, conf)
+		c, err := tls.Dial(proto, *remote, conf)
 		if err != nil {
 			logger.Printf("[INFO] [C:%08x] Could not connect using TLS to %s: %s", ic.id, *remote, err)
 			return
 		}
 		ic.remoteConn = c
 	} else {
-		c, err := net.Dial("tcp", *remote)
+		c, err := net.Dial(proto, *remote)
 		if err != nil {
 			logger.Printf("[INFO] [C:%08x] Could not connect in plain to %s: %s ", ic.id, *remote, err)
 			return

@@ -31,6 +31,8 @@ var (
 	pidFile    = flag.String("pidfile", filepath.Join(os.Getenv("TMPDIR"), "/"+PROGNAME+".pid"), "Path to PID file")
 	sendSignal = flag.String("signal", "", "Send signal to daemon (currently only \"stop\" or \"restart\")")
 	foreground = flag.Bool("foreground", false, "Run in foreground (not as daemon)")
+	ipv6       = flag.Bool("ipv6", false, "Use IPv6 only")
+	ipv4       = flag.Bool("ipv4", false, "Use IPv4 only")
 	debug      = flag.Bool("debug", false, "Debugging")
 	omits      omitEntries
 )
